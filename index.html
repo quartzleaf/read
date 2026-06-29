@@ -634,16 +634,16 @@ body.countdown-hidden .countdown-section .countdown-note{
 .book-card .delete-btn:hover,
 .entry-card .delete-btn:hover,
 .praise-card .delete-btn:hover{ background:var(--oxblood);}
-
-.add-card-trigger{
-  border:1.5px dashed rgba(201,162,75,0.45); background:transparent; color:var(--ash);
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
-  aspect-ratio:3/4.3; font-family:var(--display); font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase;
-  transition:color 0.3s ease, border-color 0.3s ease;
-}
-.add-card-trigger:hover{ color:var(--gold-bright); border-color:var(--gold);}
-.add-card-trigger .plus{ font-size:1.8rem; line-height:1;}
-
+  body:not(.edit-mode) .delete-btn{
+    display:none !important;
+    opacity:0;
+    pointer-events:none;
+  }
+  body.edit-mode .delete-btn{
+    display:flex !important;
+    opacity:1;
+    pointer-events:auto;
+  }
 .add-form{
   margin-top:30px; max-width:560px; margin-left:auto; margin-right:auto;
   background:var(--stone-mid); border:1px solid rgba(201,162,75,0.25); padding:32px;
@@ -2006,6 +2006,10 @@ function bindDeleteButtons(){
   document.querySelectorAll('.delete-btn').forEach(btn => {
     btn.onclick = (e) => {
       e.stopPropagation();
+      if (!document.body.classList.contains('edit-mode')){
+        alert('Enable Edit Mode to delete items.');
+        return;
+      }
       const { id, type } = btn.dataset;
       if (type === 'book'){ deleteItem('books', id); }
       if (type === 'poem'){ deleteItem('poems', id); }
